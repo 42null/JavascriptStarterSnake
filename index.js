@@ -12,6 +12,9 @@
 
 import runServer from './server.js';
 
+// Game items set at start
+let _boardMaxX = -1, _boardMaxY = -1;
+
 // info is called when you create your Battlesnake on play.battlesnake.com
 // and controls your Battlesnake's appearance
 // TIP: If you open your Battlesnake URL in a browser you should see this data
@@ -30,6 +33,9 @@ function info() {
 // start is called when your Battlesnake begins a game
 function start(gameState) {
   console.log("GAME START");
+
+    _boardMaxX = gameState.board.width - 1;
+    _boardMaxY = gameState.board.height - 1;
 }
 
 // end is called when your Battlesnake finishes a game
@@ -53,22 +59,28 @@ function move(gameState) {
   const myHead = gameState.you.body[0];
   const myNeck = gameState.you.body[1];
 
-  if (myNeck.x < myHead.x) {        // Neck is left of head, don't move left
-    isMoveSafe.left = false;
-
-  } else if (myNeck.x > myHead.x) { // Neck is right of head, don't move right
-    isMoveSafe.right = false;
-
-  } else if (myNeck.y < myHead.y) { // Neck is below head, don't move down
-    isMoveSafe.down = false;
-
-  } else if (myNeck.y > myHead.y) { // Neck is above head, don't move up
-    isMoveSafe.up = false;
-  }
-
-  // TODO: Step 1 - Prevent your Battlesnake from moving out of bounds
-  // boardWidth = gameState.board.width;
-  // boardHeight = gameState.board.height;
+    // CHECK for collisions with neck
+    if (myNeck.x < myHead.x) {
+        isMoveSafe.left = false;
+    } else if (myNeck.x > myHead.x) {
+        isMoveSafe.right = false;
+    } else if (myNeck.y < myHead.y) {
+        isMoveSafe.down = false;
+    } else if (myNeck.y > myHead.y) {
+        isMoveSafe.up = false;
+    }
+    // CHECK for collisions with walls.
+    if (myHead.x == 0) {
+        isMoveSafe.left = false;
+    } else if (myHead.x == _boardMaxX) {
+        isMoveSafe.right = false;
+    }
+    if (myHead.y == 0) {
+        isMoveSafe.down = false;
+    } else if (myHead.y == _boardMaxY) {
+      console.log("Not safe up")
+        isMoveSafe.up = false;
+    }
 
   // TODO: Step 2 - Prevent your Battlesnake from colliding with itself
   // myBody = gameState.you.body;
@@ -89,8 +101,9 @@ function move(gameState) {
   // TODO: Step 4 - Move towards food instead of random, to regain health and survive longer
   // food = gameState.board.food;
 
-  console.log(`MOVE ${gameState.turn}: ${nextMove}`)
-  return { move: nextMove };
+      console.log(`MOVE ${gameState.turn}: ${nextMove}`)
+      // console.log(myHead.y+"_"+_boardMaxY)
+return { move: nextMove };
 }
 
 runServer({
