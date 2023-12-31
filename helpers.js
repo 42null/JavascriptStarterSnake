@@ -5,6 +5,7 @@ export function generateFilledArrayBoard(width, height, fill) {
     for (let j = 0; j < width; j++) {
       row[j] = new Array(2);
       row[j][0] = fill;
+      row[j][1] = 0;
     }
     array[i] = row;
   }
@@ -24,7 +25,7 @@ export function generateFilledArrayBoard(width, height, fill) {
 // }
 
 export function printBoard(board) {
-  console.log(" -----------");
+  console.log(" 0123456789-");
   for (let coloum = board[0].length - 1; coloum >= 0; coloum--) {
     process.stdout.write("|");
 
@@ -35,5 +36,14 @@ export function printBoard(board) {
     console.log("|");
   }
 
-  console.log(" ----------\n");
+  console.log(" 0123456789-\n");
+}
+
+export function printPath(path) {
+    path.forEach( direction => process.stdout.write(direction+" ") );
+    console.log();
+}
+
+export function clamp(number, min, max) {
+  return number <= min ? min : number >= max ? max : number;
 }

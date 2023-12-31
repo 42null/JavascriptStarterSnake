@@ -14,6 +14,7 @@ import runServer from "./server.js";
 import { generateFilledArrayBoard, printBoard } from "./helpers.js";
 
 import { PredictorBoard } from './predictor.js';
+import { TreeSearch } from './treeSearch.js';
 
 // Game items set at start
 let _boardMaxX = -1,
@@ -84,16 +85,30 @@ function move(gameState) {
 
     const predictor = new PredictorBoard(gameState);
 
+    // Snake details
+      const myHead = gameState.you.body[0];
+      const myNeck = gameState.you.body[1];
+      const myLength = gameState.you.length;
     
-    console.log(`Turn # ${gameState.turn}`);
+    console.log(`Turn # ${gameState.turn} (Current)`);
+    // printBoard(predictor.getBoard());
+    console.log("(Expected)");
+    predictor.predictNextTurn('A');
+    // printBoard(predictor.getBoard());
+    predictor.predictNextTurn('B');
     printBoard(predictor.getBoard());
+
+    // Check for paths avaiable
+    const treeSearch = new TreeSearch(predictor.getBoard(), myHead.x, myHead.y, 1);
+    treeSearch.generatePaths();
+    treeSearch.pickPath();
     
   // We've included code to prevent your Battlesnake from moving backwards
-  const myHead = gameState.you.body[0];
-  const myNeck = gameState.you.body[1];
-  const myLength = gameState.you.length;
+  // const myHead = gameState.you.body[0];
+  // const myNeck = gameState.you.body[1];
+  // const myLength = gameState.you.length;
 
-  let killOpponentLength = -1;
+  // let killOpponentLength = -1;
 
   // CHECK for collisions with neck
   if (myNeck.x < myHead.x) {
